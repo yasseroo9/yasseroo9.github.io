@@ -6,7 +6,7 @@ function searchOrder() {
     gapi.load('client', () => {
         gapi.client.init({
             apiKey: API_KEY,
-            discoveryDocs: ["https://sheets.googleapis.com/$discovery/rest?version=v4"],
+            discoveryDocs: ["https://docs.google.com/spreadsheets/d/1Xx-UhRa1QtGA6yx6FMDw68zWb8iOoWfAi9oIsAaUcKo/edit?usp=sharing"],
         }).then(() => {
             return gapi.client.sheets.spreadsheets.values.get({
                 spreadsheetId: SPREADSHEET_ID,
