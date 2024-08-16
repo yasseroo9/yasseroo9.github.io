@@ -4,15 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order Search Admin Panel</title>
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
 </head>
 <body>
     <h1>Order Management System</h1>
 
-    <!-- Admin Section for uploading CSV -->
+    <!-- Admin Section for uploading XLSX -->
     <section id="adminSection">
         <h2>Admin Panel</h2>
-        <label for="fileUpload">Upload Order File (CSV): </label>
-        <input type="file" id="fileUpload" accept=".csv">
+        <label for="fileUpload">Upload Order File (XLSX): </label>
+        <input type="file" id="fileUpload" accept=".xlsx">
         <button onclick="saveData()">Upload and Save Data</button>
     </section>
 
@@ -44,24 +45,21 @@
             const reader = new FileReader();
 
             reader.onload = function(e) {
-                const text = e.target.result;
-                orderData = parseCSV(text);
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, {type: 'array'});
+                const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                orderData = XLSX.utils.sheet_to_json(firstSheet, {header: 1});
             };
 
-            reader.readAsText(file);
+            reader.readAsArrayBuffer(file);
         });
-
-        function parseCSV(text) {
-            const rows = text.split('\n').map(row => row.split(','));
-            return rows;
-        }
 
         function saveData() {
             if (orderData.length > 0) {
                 localStorage.setItem('orderData', JSON.stringify(orderData));
                 alert('Data saved successfully!');
             } else {
-                alert('Please upload a CSV file first.');
+                alert('Please upload an XLSX file first.');
             }
         }
 
