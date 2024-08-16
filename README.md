@@ -23,7 +23,7 @@
     <!-- Section for searching orders -->
     <section id="searchSection">
         <h2>Search Your Order</h2>
-        <label for="trackingNumber">Enter Tracking Number: </label>
+        <label for="trackingNumber">Enter Tracking Number or Order ID: </label>
         <input type="text" id="trackingNumber">
         <button onclick="searchOrder()">Search</button>
         <div id="result" style="display:none;"></div>
@@ -86,19 +86,35 @@
 
             let resultHtml = '';
 
-            const order = orderData.find(row => row[1] === trackingNumber); // Updated index to 1 for "Tracking No."
+            const order = orderData.find(row => row[1] === trackingNumber || row[2] === trackingNumber); // Check both "Tracking No." (index 1) and "Order ID" (index 2)
 
             if (order) {
-                const reshipTrackingNumber = order[12]; // Updated index to 12 for "Reship Tracking Number"
-                const ddlForReshipping = order[5]; // Updated index to 5 for "DDL For Reshipping"
-                const returnToSender = order[4]; // Updated index to 4 for "RTO reason feedback..."
+                const reshipTrackingNumber = order[12]; // "Reship Tracking Number"
+                const ddlForReshipping = order[5]; // "DDL For Re-shipping"
+                const returnToSender = order[4]; // "RTO reason feedback..."
 
                 if (reshipTrackingNumber) {
-                    resultHtml += `<p>Your Reship Tracking Number: ${reshipTrackingNumber}</p>`;
+                    // Copy the Reship Tracking Number to the search bar and generate the response script
+                    document.getElementById('trackingNumber').value = reshipTrackingNumber;
+                    resultHtml += `
+                        <p>Dear customer, for your order ${trackingNumber} logistics track has been updated with the following: In international transit.</p>
+                        <p>You can check your order logistics track on this website: <a href="https://www.17track.net/en" target="_blank">https://www.17track.net/en</a></p>
+                        <p>This is the tracking number: ${reshipTrackingNumber}</p>
+                        <p>The estimated time of arrival of your order is:</p>
+                    `;
                 } else if (ddlForReshipping && new Date() > new Date(ddlForReshipping)) {
-                    resultHtml += `<p>Refund initiation script based on your policy.</p>`;
-                } else if (returnToSender === 'TRUE') {
-                    resultHtml += `<p>Package is returning to sender. Apologies for the inconvenience. We will reship within 14-35 days.</p>`;
+                    // Generate the script when the DDL for Re-shipping is exceeded and no Reship Tracking Number
+                    resultHtml += `
+                        <p>I'm truly sorry for the inconvenience caused to you. Please don't worry, we will escalate your dispute to the concerned department, and you can expect to receive the result within 72 hours.</p>
+                        <p>Thank you for your understanding. If you have any questions, please feel free to contact us at any time. 🕒📲</p>
+                    `;
+                } else {
+                    // Generate the script when the order is returning to the sender
+                    resultHtml += `
+                        <p>We regret to inform you that your order has been returned to our warehouse due to ${returnToSender}. Please note that we will arrange the reshipment for you within 7 days.</p>
+                        <p>Kindly provide your address and if there are any changes needed for the recipient or mobile number, please provide them as well. Thank you in advance.</p>
+                        <p>Please note that you will receive an SMS or WhatsApp including the new tracking number to track your order when we reship it. Thank you for your understanding.</p>
+                    `;
                 }
             } else {
                 resultHtml = '<p>No matching order found.</p>';
