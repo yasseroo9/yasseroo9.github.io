@@ -86,12 +86,12 @@
 
             let resultHtml = '';
 
-            const order = orderData.find(row => row[0] === trackingNumber);
+            const order = orderData.find(row => row[1] === trackingNumber); // Updated index to 1 for "Tracking No."
 
             if (order) {
-                const reshipTrackingNumber = order[1];
-                const ddlForReshipping = order[2];
-                const returnToSender = order[3];
+                const reshipTrackingNumber = order[12]; // Updated index to 12 for "Reship Tracking Number"
+                const ddlForReshipping = order[5]; // Updated index to 5 for "DDL For Reshipping"
+                const returnToSender = order[4]; // Updated index to 4 for "RTO reason feedback..."
 
                 if (reshipTrackingNumber) {
                     resultHtml += `<p>Your Reship Tracking Number: ${reshipTrackingNumber}</p>`;
@@ -113,7 +113,7 @@
             const dataDisplay = document.getElementById('dataDisplay');
             dataDisplay.style.display = 'block';
 
-            let dataHtml = '<table border="1"><tr><th>Tracking Number</th><th>Reship Tracking Number</th><th>DDL For Reshipping</th><th>Return To Sender</th></tr>';
+            let dataHtml = '<table border="1"><tr><th>Date</th><th>Tracking No.</th><th>Order ID</th><th>Country</th><th>RTO reason feedback</th><th>DDL For Re-shipping</th><th>Register Date</th><th>Recipient\'s Name</th><th>Street</th><th>City</th><th>State</th><th>Zip Code</th><th>Phone Number</th><th>Reship Tracking Number</th><th>Reship Date</th></tr>';
 
             orderData.forEach(row => {
                 dataHtml += '<tr>';
