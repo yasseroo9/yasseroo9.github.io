@@ -3,8 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Search Admin Panel</title>
+    <title>Order Management System</title>
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        section {
+            background-color: #fff;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="file"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-right: 10px;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        button:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        hr {
+            border: 0;
+            border-top: 1px solid #eee;
+            margin: 40px 0;
+        }
+        #result, #dataDisplay {
+            margin-top: 20px;
+        }
+        #result p, #dataDisplay table {
+            font-size: 16px;
+        }
+        #dataDisplay table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        #dataDisplay th, #dataDisplay td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        #dataDisplay th {
+            background-color: #3498db;
+            color: #fff;
+        }
+        #dataDisplay td {
+            background-color: #f9f9f9;
+        }
+    </style>
 </head>
 <body>
     <h1>Order Management System</h1>
@@ -12,7 +91,7 @@
     <!-- Admin Section for uploading XLSX -->
     <section id="adminSection">
         <h2>Admin Panel</h2>
-        <label for="fileUpload">Upload Order File (XLSX): </label>
+        <label for="fileUpload">Upload Order File (XLSX):</label>
         <input type="file" id="fileUpload" accept=".xlsx">
         <button onclick="saveData()">Upload and Save Data</button>
         <button onclick="removeData()">Remove All Data</button>
@@ -23,7 +102,7 @@
     <!-- Section for searching orders -->
     <section id="searchSection">
         <h2>Search Your Order</h2>
-        <label for="trackingNumber">Enter Tracking Number or Order ID: </label>
+        <label for="trackingNumber">Enter Tracking Number or Order ID:</label>
         <input type="text" id="trackingNumber">
         <button onclick="searchOrder()">Search</button>
         <div id="result" style="display:none;"></div>
