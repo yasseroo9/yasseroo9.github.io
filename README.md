@@ -15,6 +15,7 @@
         <label for="fileUpload">Upload Order File (XLSX): </label>
         <input type="file" id="fileUpload" accept=".xlsx">
         <button onclick="saveData()">Upload and Save Data</button>
+        <button onclick="removeData()">Remove All Data</button>
     </section>
 
     <hr>
@@ -68,6 +69,13 @@
             if (savedData) {
                 orderData = JSON.parse(savedData);
             }
+        }
+
+        function removeData() {
+            localStorage.removeItem('orderData');
+            orderData = [];
+            alert('All data has been removed.');
+            document.getElementById('dataDisplay').style.display = 'none';
         }
 
         function searchOrder() {
