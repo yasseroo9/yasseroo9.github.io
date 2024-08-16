@@ -83,6 +83,26 @@
         #dataDisplay td {
             background-color: #f9f9f9;
         }
+        /* New Styles for Category Panel and File History */
+        #categoryPanel, #fileHistory {
+            margin-top: 20px;
+        }
+        #categoryPanel input[type="text"] {
+            width: calc(80% - 20px);
+        }
+        #categoryPanel button {
+            margin-top: 10px;
+        }
+        #fileHistory ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        #fileHistory li {
+            background-color: #e1e1e1;
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body>
@@ -91,10 +111,30 @@
     <!-- Admin Section for uploading XLSX -->
     <section id="adminSection">
         <h2>Admin Panel</h2>
-        <label for="fileUpload">Upload Order File (XLSX):</label>
-        <input type="file" id="fileUpload" accept=".xlsx">
-        <button onclick="saveData()">Upload and Save Data</button>
-        <button onclick="removeData()">Remove All Data</button>
+        
+        <!-- Category Panel -->
+        <div id="categoryPanel">
+            <h3>Manage Categories</h3>
+            <label for="categoryInput">Add New Category:</label>
+            <input type="text" id="categoryInput" placeholder="Enter category name">
+            <button onclick="addCategory()">Add Category</button>
+            <ul id="categoryList"></ul>
+        </div>
+
+        <hr>
+
+        <!-- File Upload and History -->
+        <div id="fileUploadSection">
+            <label for="fileUpload">Upload Order File (XLSX):</label>
+            <input type="file" id="fileUpload" accept=".xlsx">
+            <button onclick="saveData()">Upload and Save Data</button>
+            <button onclick="removeData()">Remove All Data</button>
+        </div>
+
+        <div id="fileHistory">
+            <h3>File Upload History</h3>
+            <ul id="fileHistoryList"></ul>
+        </div>
     </section>
 
     <hr>
@@ -119,6 +159,7 @@
 
     <script>
         let orderData = [];
+        let categories = [];
 
         document.getElementById('fileUpload').addEventListener('change', function(event) {
             const file = event.target.files[0];
@@ -129,6 +170,7 @@
                 const workbook = XLSX.read(data, {type: 'array'});
                 const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
                 orderData = XLSX.utils.sheet_to_json(firstSheet, {header: 1});
+                addFileToHistory(file.name); // Add file to history
             };
 
             reader.readAsArrayBuffer(file);
@@ -168,7 +210,7 @@
             const order = orderData.find(row => row[1] === trackingNumber || row[2] === trackingNumber); // Check both "Tracking No." (index 1) and "Order ID" (index 2)
 
             if (order) {
-                const reshipTrackingNumber = order[13]; // "Reship Tracking Number"
+                const reshipTrackingNumber = order[12]; // "Reship Tracking Number"
                 const ddlForReshipping = order[5]; // "DDL For Re-shipping"
                 const returnToSender = order[4]; // "RTO reason feedback..."
 
@@ -192,35 +234,4 @@
                     resultHtml += `
                         <p>We regret to inform you that your order has been returned to our warehouse due to ${returnToSender}. Please note that we will arrange the reshipment for you within 7 days.</p>
                         <p>Kindly provide your address and if there are any changes needed for the recipient or mobile number, please provide them as well. Thank you in advance.</p>
-                        <p>Please note that you will receive an SMS or WhatsApp including the new tracking number to track your order when we reship it. Thank you for your understanding.</p>
-                    `;
-                }
-            } else {
-                resultHtml = '<p>No matching order found.</p>';
-            }
-
-            resultDiv.innerHTML = resultHtml;
-            resultDiv.style.display = 'block';
-        }
-
-        function displayAllData() {
-            loadData();
-            const dataDisplay = document.getElementById('dataDisplay');
-            dataDisplay.style.display = 'block';
-
-            let dataHtml = '<table border="1"><tr><th>Date</th><th>Tracking No.</th><th>Order ID</th><th>Country</th><th>RTO reason feedback</th><th>DDL For Re-shipping</th><th>Register Date</th><th>Recipient\'s Name</th><th>Street</th><th>City</th><th>State</th><th>Zip Code</th><th>Phone Number</th><th>Reship Tracking Number</th><th>Reship Date</th></tr>';
-
-            orderData.forEach(row => {
-                dataHtml += '<tr>';
-                row.forEach(cell => {
-                    dataHtml += `<td>${cell}</td>`;
-                });
-                dataHtml += '</tr>';
-            });
-
-            dataHtml += '</table>';
-            dataDisplay.innerHTML = dataHtml;
-        }
-    </script>
-</body>
-</html>
+                        <p>Please note that you will receive an SMS or WhatsApp including the new tracking number
