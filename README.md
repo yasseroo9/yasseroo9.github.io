@@ -234,4 +234,80 @@
                     resultHtml += `
                         <p>We regret to inform you that your order has been returned to our warehouse due to ${returnToSender}. Please note that we will arrange the reshipment for you within 7 days.</p>
                         <p>Kindly provide your address and if there are any changes needed for the recipient or mobile number, please provide them as well. Thank you in advance.</p>
-                        <p>Please note that you will receive an SMS or WhatsApp including the new tracking number
+                        <p>Please note that you will receive an SMS or WhatsApp including the new tracking number to track your order when we reship it. Thank you for your understanding.</p>
+                    `;
+                }
+            } else {
+                resultHtml = '<p>No matching order found.</p>';
+            }
+
+            resultDiv.innerHTML = resultHtml;
+            resultDiv.style.display = 'block';
+        }
+
+        function displayAllData() {
+            loadData();
+            const dataDisplay = document.getElementById('dataDisplay');
+            dataDisplay.style.display = 'block';
+
+            let dataHtml = '<table border="1"><tr><th>Date</th><th>Tracking No.</th><th>Order ID</th><th>Country</th><th>RTO reason feedback</th><th>DDL For Re-shipping</th><th>Register Date</th><th>Recipient\'s Name</th><th>Street</th><th>City</th><th>State</th><th>Zip Code</th><th>Phone Number</th><th>Reship Tracking Number</th><th>Reship Date</th></tr>';
+
+            orderData.forEach(row => {
+                dataHtml += '<tr>';
+                row.forEach(cell => {
+                    dataHtml += `<td>${cell}</td>`;
+                });
+                dataHtml += '</tr>';
+            });
+
+            dataHtml += '</table>';
+            dataDisplay.innerHTML = dataHtml;
+        }
+
+        function addCategory() {
+            const categoryInput = document.getElementById('categoryInput');
+            const categoryName = categoryInput.value.trim();
+
+            if (categoryName) {
+                categories.push(categoryName);
+                localStorage.setItem('categories', JSON.stringify(categories));
+                updateCategoryList();
+                categoryInput.value = ''; // Clear the input field
+            } else {
+                alert('Please enter a category name.');
+            }
+        }
+
+        function updateCategoryList() {
+            const categoryList = document.getElementById('categoryList');
+            categoryList.innerHTML = '';
+
+            categories.forEach(category => {
+                const listItem = document.createElement('li');
+                listItem.textContent = category;
+                categoryList.appendChild(listItem);
+            });
+        }
+
+        function loadCategories() {
+            const savedCategories = localStorage.getItem('categories');
+            if (savedCategories) {
+                categories = JSON.parse(savedCategories);
+                updateCategoryList();
+            }
+        }
+
+        function addFileToHistory(fileName) {
+            const fileHistoryList = document.getElementById('fileHistoryList');
+            const listItem = document.createElement('li');
+            listItem.textContent = fileName + ' uploaded on ' + new Date().toLocaleString();
+            fileHistoryList.appendChild(listItem);
+        }
+
+        // Load categories when the page loads
+        window.onload = function() {
+            loadCategories();
+        }
+    </script>
+</body>
+</html>
