@@ -168,7 +168,7 @@
             const order = orderData.find(row => row[1] === trackingNumber || row[2] === trackingNumber); // Check both "Tracking No." (index 1) and "Order ID" (index 2)
 
             if (order) {
-                const reshipTrackingNumber = order[12]; // "Reship Tracking Number"
+                const reshipTrackingNumber = order[13]; // "Reship Tracking Number"
                 const ddlForReshipping = order[5]; // "DDL For Re-shipping"
                 const returnToSender = order[4]; // "RTO reason feedback..."
 
